@@ -36,13 +36,17 @@ class BaseConan:
     options = {
         "fPIC": [True, False],
         "build_examples": [True, False],
-        "build_tests": [True, False]
+        "build_manual": [True, False],
+        "build_tests": [True, False],
+        "manual_repository": ["ANY"]
     }
     
     default_options = {
         "fPIC": True,
         "build_examples": False,
-        "build_tests": False
+        "build_manual": False,
+        "build_tests": False,
+        "manual_repository": None
     }
 
     ############################################################################
@@ -54,6 +58,17 @@ class BaseConan:
         content = load(os.path.join(conan_file.recipe_folder, filename))
         version = re.search("set\({} (\d+\.\d+\.\d+)\)".format(varname), content).group(1)
         conan_file.version = version.strip()
+    
+    @classmethod
+    def config_options(cls, conan_file):
+        pass
+    
+    # Getting weird errors when the method is called configure.
+    # Not sure why all the others don't have the same problem...
+    @classmethod
+    def configure2(cls, conan_file):
+        if not conan_file.options.build_manual:
+            del conan_file.options.manual_repository
 
     @classmethod
     def requirements(cls, conan_file):
@@ -65,6 +80,9 @@ class BaseConan:
         tc.variables["USE_CONAN"] = True
         if conan_file.options.build_examples:
             tc.variables["BUILD_EXAMPLES"] = True
+        if conan_file.options.build_manual:
+            tc.variables["BUILD_MANUAL"] = True
+            tc.variables["MANUAL_REPOSITORY"] = conan_file.options.manual_repository
         if conan_file.options.build_tests:
             tc.variables["BUILD_TESTS"] = True
         return tc
@@ -80,6 +98,9 @@ class BaseConan:
         cmake.definitions["USE_CONAN"] = True
         if conan_file.options.build_examples:
             cmake.definitions["BUILD_EXAMPLES"] = True
+        if conan_file.options.build_manual:
+            cmake.definitions["BUILD_MANUAL"] = True
+            cmake.definitions["MANUAL_REPOSITORY"] = conan_file.options.manual_repository
         if conan_file.options.build_tests:
             cmake.definitions["BUILD_TESTS"] = True
         return cmake
