@@ -3,8 +3,8 @@ import os
 import re
 
 from conan import ConanFile
-from conan.tools import load
 from conan.tools.cmake import CMake, CMakeToolchain, CMakeDeps
+from conan.tools.files import load
 
 class BaseConan:
     ############################################################################
