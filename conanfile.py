@@ -2,9 +2,9 @@ from abc import abstractmethod
 import os
 import re
 
-from conans import ConanFile, CMake
-from conans.tools import load
-from conan.tools.cmake import CMakeToolchain, CMakeDeps
+from conan import ConanFile
+from conan.tools import load
+from conan.tools.cmake import CMake, CMakeToolchain, CMakeDeps
 
 class BaseConan:
     ############################################################################
@@ -72,12 +72,13 @@ class BaseConan:
 
     @classmethod
     def requirements(cls, conan_file):
-        pass
+        conan_file.requires("cmake-modules/1.0.0@timzoet/stable")
     
     @classmethod
     def generate_toolchain(cls, conan_file):
         tc = CMakeToolchain(conan_file)
         tc.variables["USE_CONAN"] = True
+        tc.variables["CMAKE_TEMPLATE_DIR"] = conan_file.deps_cpp_info["cmake-modules"].rootpath.replace(os.sep, "/")
         if conan_file.options.build_examples:
             tc.variables["BUILD_EXAMPLES"] = True
         if conan_file.options.build_manual:
@@ -95,14 +96,6 @@ class BaseConan:
     @classmethod
     def configure_cmake(cls, conan_file):
         cmake = CMake(conan_file)
-        cmake.definitions["USE_CONAN"] = True
-        if conan_file.options.build_examples:
-            cmake.definitions["BUILD_EXAMPLES"] = True
-        if conan_file.options.build_manual:
-            cmake.definitions["BUILD_MANUAL"] = True
-            cmake.definitions["MANUAL_REPOSITORY"] = conan_file.options.manual_repository
-        if conan_file.options.build_tests:
-            cmake.definitions["BUILD_TESTS"] = True
         return cmake
 
 class PyReq(ConanFile):
