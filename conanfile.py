@@ -29,8 +29,6 @@ class BaseConan:
     ## Settings.                                                              ##
     ############################################################################
 
-    generators = "CMakeDeps", "CMakeToolchain"
-    
     settings = "os", "compiler", "build_type", "arch"
     
     options = {
@@ -46,7 +44,7 @@ class BaseConan:
         "build_examples": False,
         "build_manual": False,
         "build_tests": False,
-        "manual_repository": None
+        "manual_repository": ""
     }
 
     ############################################################################
@@ -55,7 +53,7 @@ class BaseConan:
     
     @classmethod
     def set_version(cls, conan_file, filename, varname):
-        content = load(os.path.join(conan_file.recipe_folder, filename))
+        content = load(conan_file, os.path.join(conan_file.recipe_folder, filename))
         version = re.search("set\({} (\d+\.\d+\.\d+)\)".format(varname), content).group(1)
         conan_file.version = version.strip()
     
@@ -78,7 +76,7 @@ class BaseConan:
     def generate_toolchain(cls, conan_file):
         tc = CMakeToolchain(conan_file)
         tc.variables["USE_CONAN"] = True
-        tc.variables["CMAKE_TEMPLATE_DIR"] = conan_file.deps_cpp_info["cmake-modules"].rootpath.replace(os.sep, "/")
+        tc.variables["CMAKE_TEMPLATE_DIR"] = os.path.dirname(conan_file.dependencies["cmake-modules"].cpp_info.components[None].includedir).replace(os.sep, "/")
         if conan_file.options.build_examples:
             tc.variables["BUILD_EXAMPLES"] = True
         if conan_file.options.build_manual:
@@ -105,3 +103,4 @@ class PyReq(ConanFile):
     url = "https://github.com/TimZoet/pyreq"
     license = "GNU AFFERO GENERAL PUBLIC LICENSE Version 3"
     author = "Tim Zoet"
+    package_type = "python-require"
