@@ -75,6 +75,7 @@ class BaseConan:
     @classmethod
     def generate_toolchain(cls, conan_file):
         tc = CMakeToolchain(conan_file)
+        tc.user_presets_path = None
         tc.variables["USE_CONAN"] = True
         tc.variables["CMAKE_TEMPLATE_DIR"] = os.path.dirname(conan_file.dependencies["cmake-modules"].cpp_info.components[None].includedir).replace(os.sep, "/")
         if conan_file.options.build_examples:
