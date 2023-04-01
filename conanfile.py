@@ -70,7 +70,7 @@ class BaseConan:
 
     @classmethod
     def requirements(cls, conan_file):
-        conan_file.requires("cmake-modules/1.0.0@timzoet/github_actions")
+        conan_file.requires("cmake-modules/1.0.0@timzoet/v1.0.0")
     
     @classmethod
     def generate_toolchain(cls, conan_file):
