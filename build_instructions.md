@@ -1,5 +1,7 @@
 # Build Instructions
 
+**Note:** Most of these steps can be automated using the [devtools](https://github.com/TimZoet/devtools).
+
 This project can only be used as a Conan package. It does not perform any compilation and merely makes the base class
 available to other Conan packages through `python_requires`.
 

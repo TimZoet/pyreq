@@ -1,4 +1,3 @@
-from abc import abstractmethod
 import os
 import re
 
@@ -16,14 +15,6 @@ class BaseConan:
     license = "GNU AFFERO GENERAL PUBLIC LICENSE Version 3"
     
     author = "Tim Zoet"
-    
-    @property
-    def default_user(self):
-        return "timzoet"
-    
-    @property
-    def default_channel(self):
-        return "stable"
 
     ############################################################################
     ## Settings.                                                              ##
@@ -70,7 +61,7 @@ class BaseConan:
 
     @classmethod
     def requirements(cls, conan_file):
-        conan_file.requires("cmake-modules/1.0.0@timzoet/v1.0.0")
+        conan_file.requires("cmake-modules/1.0.1@timzoet/v1.0.1")
     
     @classmethod
     def generate_toolchain(cls, conan_file):
@@ -105,3 +96,19 @@ class PyReq(ConanFile):
     license = "GNU AFFERO GENERAL PUBLIC LICENSE Version 3"
     author = "Tim Zoet"
     package_type = "python-require"
+
+    @property
+    def user(self):
+        return getattr(self, "_user", "timzoet")
+    
+    @user.setter
+    def user(self, value):
+        self._user = value
+    
+    @property
+    def channel(self):
+        return getattr(self, "_channel", f"v{self.version}")
+    
+    @channel.setter
+    def channel(self, value):
+        self._channel = value
