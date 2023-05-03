@@ -90,7 +90,7 @@ class BaseConan:
 
 class PyReq(ConanFile):
     name = "pyreq"
-    version = "1.0.0"
+    version = "1.0.1"
     description = "Conan package to be reused through python_requires."
     url = "https://github.com/TimZoet/pyreq"
     license = "GNU AFFERO GENERAL PUBLIC LICENSE Version 3"
