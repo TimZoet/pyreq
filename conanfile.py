@@ -27,7 +27,8 @@ class BaseConan:
         "build_examples": [True, False],
         "build_manual": [True, False],
         "build_tests": [True, False],
-        "manual_repository": ["ANY"]
+        "manual_repository": ["ANY"],
+        "use_conan": [True, False]
     }
     
     default_options = {
@@ -35,7 +36,8 @@ class BaseConan:
         "build_examples": False,
         "build_manual": False,
         "build_tests": False,
-        "manual_repository": ""
+        "manual_repository": "",
+        "use_conan": False
     }
 
     ############################################################################
@@ -67,7 +69,7 @@ class BaseConan:
     def generate_toolchain(cls, conan_file):
         tc = CMakeToolchain(conan_file)
         tc.user_presets_path = None
-        tc.variables["USE_CONAN"] = True
+        tc.variables["USE_CONAN"] = conan_file.options.use_conan
         tc.variables["TZ_CMAKE_MODULES_DIR"] = os.path.dirname(conan_file.dependencies["cmake-modules"].cpp_info.components[None].includedir).replace(os.sep, "/")
         if conan_file.options.build_examples:
             tc.variables["BUILD_EXAMPLES"] = True
@@ -90,7 +92,7 @@ class BaseConan:
 
 class PyReq(ConanFile):
     name = "pyreq"
-    version = "1.0.1"
+    version = "1.1.0"
     description = "Conan package to be reused through python_requires."
     url = "https://github.com/TimZoet/pyreq"
     license = "GNU AFFERO GENERAL PUBLIC LICENSE Version 3"
